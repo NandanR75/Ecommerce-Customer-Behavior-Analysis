@@ -1,153 +1,164 @@
-# 📊 Sales Dashboard — Power BI
+# 🛒 E-Commerce Sales & Business Intelligence Dashboard
 
-> An interactive Power BI dashboard analyzing 1,500 sales transactions across Electronics, Clothing, and Furniture categories — uncovering revenue trends, profit drivers, and payment behavior.
+An end-to-end data analytics and business intelligence project utilizing **Power BI** to analyze e-commerce sales performance, customer buying patterns, regional revenue distribution, and payment preferences across India.
 
----
-
-## 🗂️ Dataset Overview
-
-| Field | Description |
-|---|---|
-| `Order ID` | Unique identifier for each order |
-| `Amount` | Sale amount (in ₹) |
-| `Profit` | Profit earned per order (in ₹) |
-| `Quantity` | Number of units sold |
-| `Category` | Product category — Electronics, Clothing, Furniture |
-| `Sub-Category` | Specific product type (17 sub-categories) |
-| `PaymentMode` | Payment method used — COD, UPI, Debit Card, Credit Card, EMI |
-
-- **Total Records:** 1,500 transactions
-- **Unique Orders:** 500
-- **Categories:** 3 (Electronics, Clothing, Furniture)
-- **Sub-Categories:** 17
+![PowerBI](https://img.shields.io/badge/PowerBI-Dashboard-yellow?logo=powerbi)
+![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)
+![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-green?logo=pandas)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
 ---
 
-## 📈 Key Metrics
+## 📋 Project Overview & Problem Statement
 
-| Metric | Value |
-|---|---|
-| Total Sales Amount | ₹4,37,771 |
-| Total Profit | ₹36,963 |
-| Total Quantity Sold | 5,615 units |
-| Overall Profit Margin | 8.44% |
-| Average Order Value | ₹292 |
+E-commerce businesses need clear insights into their sales performance, customer segments, and regional demand to make data-driven decisions. This project analyzes **1,500 order line items across 500 orders (2018)** to uncover key revenue drivers, profitable product categories, preferred payment methods, and top-performing states and cities across India.
 
 ---
 
-## 📊 Dashboard Visuals
+## 📸 Dashboard Preview
 
-### 1. KPI Cards
-- Total Amount, Total Profit, Total Quantity, Profit Margin — displayed as summary cards at the top of the dashboard.
-
-### 2. Sales Amount by Category (Bar / Donut Chart)
-- Electronics leads with ₹1,66,267 (38%)
-- Clothing: ₹1,44,323 (33%)
-- Furniture: ₹1,27,181 (29%)
-
-### 3. Profit by Category (Bar Chart)
-- Clothing is the most profitable: ₹13,325
-- Electronics: ₹13,162
-- Furniture: ₹10,476
-
-### 4. Top Sub-Categories by Amount (Horizontal Bar Chart)
-| Sub-Category | Amount (₹) |
-|---|---|
-| Printers | 59,252 |
-| Saree | 59,094 |
-| Bookcases | 56,861 |
-| Phones | 46,119 |
-| Electronic Games | 39,168 |
-
-### 5. Top Sub-Categories by Profit (Bar Chart)
-| Sub-Category | Profit (₹) |
-|---|---|
-| Printers | 8,606 |
-| Bookcases | 6,516 |
-| Saree | 4,057 |
-| Accessories | 3,353 |
-| Tables | 3,139 |
-
-### 6. Loss-Making Sub-Categories (Bar Chart)
-| Sub-Category | Loss (₹) |
-|---|---|
-| Furnishings | -806 |
-| Electronic Games | -644 |
-| Kurti | -401 |
-| Skirt | -315 |
-| Leggings | -130 |
-
-### 7. Payment Mode Distribution (Donut Chart)
-| Payment Mode | Orders |
-|---|---|
-| COD | 684 (45.6%) |
-| UPI | 331 (22.1%) |
-| Debit Card | 202 (13.5%) |
-| Credit Card | 163 (10.9%) |
-| EMI | 120 (8.0%) |
+![E-Commerce Dashboard](images/ecommerce_dashboard.png)
 
 ---
 
-## 💡 Business Insights
-
-1. **Electronics drives the highest revenue** but Clothing edges ahead in profit — indicating better margins in Clothing.
-2. **Printers are the star product** — highest in both sales amount (₹59,252) and profit (₹8,606).
-3. **Electronic Games is a loss-maker** despite being a top revenue sub-category — pricing or cost structure needs review.
-4. **COD dominates payment modes at 45.6%** — high operational cost; promoting UPI/digital payments could improve margins.
-5. **Furnishings generate a net loss of ₹806** — should be reviewed for discontinuation or repricing.
-6. **Overall profit margin of 8.44% is thin** — focus should shift toward high-margin sub-categories like Printers, Bookcases, and Accessories.
-
----
-
-## 🛠️ Tools Used
+## 🛠️ Tech Stack & Architecture
 
 | Tool | Purpose |
-|---|---|
-| Power BI Desktop | Dashboard building and visualization |
-| DAX | Calculated measures (Profit Margin, KPIs) |
-| Power Query | Data cleaning and transformation |
-| CSV | Source data format |
+|------|---------|
+| Microsoft Power BI Desktop | Data modeling & interactive dashboard |
+| DAX (Data Analysis Expressions) | Advanced KPIs & calculated metrics |
+| Python, Pandas | Data exploration & preprocessing |
 
 ---
 
-## 📁 Project Structure
+## 📁 Repository Structure
 
 ```
-sales-dashboard/
-│
-├── Sales_Dashboard.pbix       ← Main Power BI dashboard file
-├── Details.csv                ← Raw dataset (1,500 records)
-└── README.md                  ← Project documentation
+ecommerce-dashboard-project/
+├── images/                        # Dashboard screenshots
+│   └── ecommerce_dashboard.png
+├── Orders.csv                     # Customer order master data (500 rows)
+├── Details.csv                    # Order line item details (1,500 rows)
+├── ecommerce.pbix                 # Master Power BI report file
+└── README.md                      # Project documentation
 ```
 
 ---
 
-## 🚀 How to Open
+## 📊 Dataset Overview
 
-1. Download and install **Power BI Desktop** (free) from [powerbi.microsoft.com](https://powerbi.microsoft.com/desktop)
-2. Clone or download this repository
-3. Open `Sales_Dashboard.pbix` in Power BI Desktop
-4. If prompted, update the data source path to point to `Details.csv`
-5. Click **Refresh** to load the data
+### Orders.csv
+- **Rows:** 500 orders
+- **Columns:** 5 features
+- **Date Range:** January 2018 – December 2018
+- **Coverage:** 19 Indian states, 336 unique customers
+
+### Details.csv
+- **Rows:** 1,500 line items
+- **Columns:** 7 features
+- **Categories:** Electronics, Clothing, Furniture
+- **Payment Modes:** COD, UPI, Debit Card, Credit Card, EMI
+
+### Dataset Preview
+
+**Orders.csv**
+
+| Order ID | Order Date | CustomerName | State | City |
+|:---|:---|:---|:---|:---|
+| B-26055 | 10-03-2018 | Harivansh | Uttar Pradesh | Mathura |
+| B-25993 | 03-02-2018 | Madhav | Delhi | Delhi |
+| B-25973 | 24-01-2018 | Madan Mohan | Uttar Pradesh | Mathura |
+
+**Details.csv**
+
+| Order ID | Amount | Profit | Quantity | Category | Sub-Category | PaymentMode |
+|:---|:---|:---|:---|:---|:---|:---|
+| B-25681 | ₹1,096 | ₹658 | 7 | Electronics | Electronic Games | COD |
+| B-26055 | ₹5,729 | ₹64 | 14 | Furniture | Chairs | EMI |
+| B-25955 | ₹2,927 | ₹146 | 8 | Furniture | Bookcases | EMI |
 
 ---
 
-## 📌 How to Use the Dashboard
+## 📖 Data Dictionary
 
-- Use **category slicers** to filter visuals by Electronics, Clothing, or Furniture
-- Use **payment mode filters** to compare performance across COD, UPI, EMI, etc.
-- Hover over charts to see **exact values in tooltips**
-- Click any bar or slice to **cross-filter** other visuals on the page
+### Orders.csv
+
+| Column Name | Data Type | Description |
+|:---|:---|:---|
+| **Order ID** | String | Unique identifier for each order |
+| **Order Date** | Date | Date when the order was placed |
+| **CustomerName** | String | Name of the customer |
+| **State** | String | Indian state where the order was placed |
+| **City** | String | City where the order was placed |
+
+### Details.csv
+
+| Column Name | Data Type | Description |
+|:---|:---|:---|
+| **Order ID** | String | Foreign key linking to Orders.csv |
+| **Amount** | Integer | Total sale amount in INR |
+| **Profit** | Integer | Profit earned on the order in INR |
+| **Quantity** | Integer | Number of units sold |
+| **Category** | String | Product category — Electronics, Clothing, Furniture |
+| **Sub-Category** | String | Specific product type (e.g., Printers, Saree, Chairs) |
+| **PaymentMode** | String | Mode of payment — COD, UPI, Debit Card, Credit Card, EMI |
 
 ---
 
-## 👤 Author
+## 💡 Key Business Insights
 
-**Your Name**
-[LinkedIn](#) | [GitHub](#) | [Portfolio](#)
+| Metric | Value |
+|:---|:---|
+| 📦 Total Orders | 500 |
+| 🧾 Total Line Items | 1,500 |
+| 💰 Total Revenue | ₹4,37,771 |
+| 📈 Total Profit | ₹36,963 |
+| 📊 Profit Margin | 8.44% |
+| 🛍️ Total Units Sold | 5,615 |
+| 👥 Unique Customers | 336 |
+| 🏆 Top Category | Electronics (₹1,66,267) |
+| 📍 Top State | Maharashtra (₹1,02,498) |
+| 🏙️ Top City | Indore (₹63,680) |
+| 💳 Most Used Payment | COD (684 transactions) |
+| 🔝 Top Sub-Category | Printers (₹59,252) |
 
 ---
 
-## 📄 License
+## 🚀 How to Run the Project Locally
 
-This project is open source and available under the [MIT License](LICENSE).
+### Requirements
+- [Microsoft Power BI Desktop](https://powerbi.microsoft.com/desktop/) (free)
+- Python 3.x with `pandas` for data exploration (optional)
+
+### Steps
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/NandanR75/<your-repo-name>.git
+   cd <your-repo-name>
+   ```
+
+2. **Open the Power BI Dashboard**
+   - Double-click `ecommerce.pbix` to open in Power BI Desktop
+   - If prompted to update data source path:
+     - Go to **Home → Transform Data → Data Source Settings**
+     - Click **Change Source** and browse to your local `Orders.csv` and `Details.csv`
+     - Click **Apply Changes** to refresh all visuals
+
+3. **Explore the Data (Optional)**
+   ```python
+   import pandas as pd
+   orders = pd.read_csv('Orders.csv')
+   details = pd.read_csv('Details.csv')
+   merged = orders.merge(details, on='Order ID')
+   print(merged.describe())
+   ```
+
+---
+
+## 🤝 Let's Connect!
+
+Interested in collaborating or discussing this project?
+
+- 💼 **LinkedIn:** https://www.linkedin.com/in/nandan-r-010564224
+- 📧 **Email:** nandanr121995@gmail.com
