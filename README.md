@@ -17,7 +17,7 @@ E-commerce businesses need clear insights into their sales performance, customer
 
 ## 📸 Dashboard Preview
 
-![E-Commerce Dashboard](images/ecommerce_dashboard.png)
+![E-Commerce Dashboard](./images/ecommerce_dashboard.png)
 
 ---
 
