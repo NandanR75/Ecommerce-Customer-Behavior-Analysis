@@ -1,0 +1,32 @@
+import pandas as pd
+import numpy as np
+import os
+
+def run_advanced_pipeline(orders_csv="Datasets/Orders.csv", details_csv="Datasets/Details.csv"):
+    print("🚀 Booting Enterprise Preprocessing Pipeline...")
+    
+    if not os.path.exists(orders_csv) or not os.path.exists(details_csv):
+        print("❌ Error: Ground truth CSV files not found.")
+        return
+        
+    orders = pd.read_csv(orders_csv)
+    details = pd.read_csv(details_csv)
+    
+    # Drop records missing vital relational structural keys
+    orders.dropna(subset=['Order ID'], inplace=True)
+    details.dropna(subset=['Order ID'], inplace=True)
+    
+    # Enforce standardized chronological notation formats
+    orders['Order Date'] = pd.to_datetime(orders['Order Date'], format='%d-%m-%Y')
+    
+    # Remove hidden tracking white spaces from category dimensions
+    for col in ['CustomerName', 'State', 'City']: orders[col] = orders[col].astype(str).str.strip()
+    for col in ['Category', 'Sub-Category', 'PaymentMode']: details[col] = details[col].astype(str).str.strip()
+        
+    # Export cleanly formatted baseline files for system ingestion
+    orders.to_csv("Datasets/Cleaned_Orders.csv", index=False)
+    details.to_csv("Datasets/Cleaned_Details.csv", index=False)
+    print("✅ System Stage: Preprocessed CSV tables compiled.")
+
+if __name__ == "__main__":
+    run_advanced_pipeline()
