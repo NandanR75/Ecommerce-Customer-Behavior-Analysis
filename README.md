@@ -116,7 +116,7 @@ Chronological Standardization: Normalizes disparate dates into standard ISO-comp
 Text Normalization: Eradicates hidden leading or trailing whitespaces from categorization strings (Category, Sub-Category, PaymentMode) to prevent data leakage or downstream indexing failures in reporting views.
 
 .📄 Complete Preprocessing Script (Python_Scripts/data_preprocessing.py)
-    import pandas as pd
+   import pandas as pd
 import numpy as np
 import os
 
@@ -132,11 +132,11 @@ def run_advanced_pipeline(orders_csv="Orders.csv", details_csv="Details.csv"):
     orders = pd.read_csv(orders_csv)
     details = pd.read_csv(details_csv)
     
-    # 1. Clear missing key values
+    # 1. Clear missing row indicators
     orders.dropna(subset=['Order ID'], inplace=True)
     details.dropna(subset=['Order ID'], inplace=True)
     
-    # 2. Standardize dates to ISO format
+    # 2. Standardize dates to ISO format (YYYY-MM-DD)
     orders['Order Date'] = pd.to_datetime(orders['Order Date'], format='%d-%m-%Y')
     
     # 3. Strip hidden trailing white spaces from text inputs
@@ -152,18 +152,10 @@ def run_advanced_pipeline(orders_csv="Orders.csv", details_csv="Details.csv"):
 
 if __name__ == "__main__":
     run_advanced_pipeline(orders_csv="Orders.csv", details_csv="Details.csv")
-
+    
  ###   🗄️ Phase 2: Relational Schema & Analytical Layers (SQL)
-The structured entities are handled using modular SQL configuration scripts written to mirror standard production warehouses.
-
 1. Schema Configuration (SQL_Analytics/schema_setup.sql)
-Implements an optimized Star Schema establishing clear primary and foreign key constraints between operational master boundaries. It applies database indexing on high-frequency filtering attributes (Order_Date, Category) to maximize join performance.
-
--- ====================================================================
--- DATABASE SCHEMA SETUP & TABLE CONFIGURATION
--- Purpose: Builds relational tables with strict constraint integrity
--- ====================================================================
-
+SQL
 -- Create the database staging container
 CREATE DATABASE IF NOT EXISTS ecommerce_staging;
 USE ecommerce_staging;
@@ -200,20 +192,11 @@ CREATE TABLE Details (
 CREATE INDEX idx_orders_date ON Orders(Order_Date);
 CREATE INDEX idx_details_category ON Details(Category);
 
-2. Business Intelligence Scripting (SQL_Analytics/business_analytics_queries.sql)
-Advanced business metrics are evaluated directly inside the engine layer using Common Table Expressions (CTEs), Window Functions (SUM() OVER (...)), and complex filtering matrices.
-
--- ====================================================================
--- ADVANCED BUSINESS ANALYTICS & EXECUTIVE INSIGHTS
--- Purpose: Drives strategic decision-making using high-performance queries
--- ====================================================================
-
+2. Analytical Optimization Queries (SQL_Analytics/business_analytics_queries.sql)
+SQL
 USE ecommerce_staging;
 
--- --------------------------------------------------------------------
--- QUERY A: The Cash-on-Delivery (COD) Risk Exposure Profile
--- Business Value: Quantifies high-risk payment channels to save logistics costs
--- --------------------------------------------------------------------
+-- QUERY A: The Cash-on-Delivery (COD) Risk Exposure Profile Matrix
 SELECT 
     PaymentMode,
     COUNT(DISTINCT Order_ID) AS Total_Transactions,
@@ -224,29 +207,7 @@ FROM Details
 GROUP BY PaymentMode
 ORDER BY Total_Transactions DESC;
 
-
--- --------------------------------------------------------------------
--- QUERY B: Regional Deep-Dive & Market Penetration (Indore Focus)
--- Business Value: Verifies regional spikes and tracks average order values
--- --------------------------------------------------------------------
-SELECT 
-    o.City,
-    o.State,
-    COUNT(DISTINCT o.Order_ID) AS Order_Volume,
-    COUNT(DISTINCT o.CustomerName) AS Unique_Buyer_Count,
-    SUM(d.Amount) AS Total_City_Revenue,
-    ROUND(SUM(d.Amount) / COUNT(DISTINCT o.Order_ID), 2) AS Average_Order_Value_INR
-FROM Orders o
-INNER JOIN Details d ON o.Order_ID = d.Order_ID
-GROUP BY o.City, o.State
-HAVING Total_City_Revenue > 10000
-ORDER BY Total_City_Revenue DESC;
-
-
--- --------------------------------------------------------------------
--- QUERY C: Rolling Revenue running totals via Window Functions
--- Business Value: Visualizes growth acceleration across dates for micro-trends
--- --------------------------------------------------------------------
+-- QUERY B: Rolling Revenue running totals via Window Functions
 WITH DailySales AS (
     SELECT 
         o.Order_Date,
@@ -263,19 +224,14 @@ FROM DailySales
 ORDER BY Order_Date;
 
 📊 Phase 3: Interactive Analytical Workspace (Power BI)
-The processed analytical data tables feed directly into a business-ready executive dashboard layout using optimized Data Analysis Expressions (DAX) calculations.
+Business-Critical Core Formulations (DAX Measures): 
 
-Core Calculations Used:
-Total Revenue Calculation:
-   Core Calculations Used:
-Total Revenue Calculation:
-
-Code snippet
+Total Sales Revenue Base Accumulator:
 Total Revenue = SUM(Details[Amount])
-Dynamic Net Profit Margin:
 
-Code snippet
+Dynamic Profit Margin Boundary Controller:
 Profit Margin = DIVIDE(SUM(Details[Profit]), [Total Revenue], 0)
+
 
 ## 💡 Key Business Insights
 
