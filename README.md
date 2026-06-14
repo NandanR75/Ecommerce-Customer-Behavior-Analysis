@@ -105,66 +105,57 @@ ecommerce-dashboard-project/
 
 ---
 
-### 🛠️ Phase 1: Automated Data Preprocessing Pipeline (Python)
-Before loading data into relational structures, a script engineered in Python (Pandas, NumPy, OS) acts as an explicit staging validator to ensure operational data integrity.
+### 🛠️Phase 1: Automated Preprocessing & ETL (Python)
+Before running warehouse staging configurations, an automated ETL script written in Python (Pandas) operates as a data quality gateway. It cleans null values, drop structural breaks, strips string artifact whitespaces, and standardizes transaction dates to ensure seamless database joins.
 
-Engineering Tasks Handled:
-Relational Integrity Checks: Automatically identifies and drops records missing essential unique matching constraints (Order ID).
-
-Chronological Standardization: Normalizes disparate dates into standard ISO-compliant formats (YYYY-MM-DD).
-
-Text Normalization: Eradicates hidden leading or trailing whitespaces from categorization strings (Category, Sub-Category, PaymentMode) to prevent data leakage or downstream indexing failures in reporting views.
-
-.📄 Complete Preprocessing Script (Python_Scripts/data_preprocessing.py)
-   import pandas as pd
+import pandas as pd
 import numpy as np
 import os
 
 def run_advanced_pipeline(orders_csv="Orders.csv", details_csv="Details.csv"):
     print("🚀 Booting Enterprise Preprocessing Pipeline...")
     
-    # Check if the data files exist in the path
+    # Verify that raw data assets exist in the path environment
     if not os.path.exists(orders_csv) or not os.path.exists(details_csv):
-        print("❌ Error: Raw datasets not found in specified directory path.")
+        print("❌ Error: Raw dataset parameters not found in file paths.")
         return
         
-    # Read the raw files
     orders = pd.read_csv(orders_csv)
     details = pd.read_csv(details_csv)
     
-    # 1. Clear missing row indicators
+    # 1. Clear missing relational keys
     orders.dropna(subset=['Order ID'], inplace=True)
     details.dropna(subset=['Order ID'], inplace=True)
     
-    # 2. Standardize dates to ISO format (YYYY-MM-DD)
+    # 2. Standardize chronology to ISO format (YYYY-MM-DD)
     orders['Order Date'] = pd.to_datetime(orders['Order Date'], format='%d-%m-%Y')
     
-    # 3. Strip hidden trailing white spaces from text inputs
-    for col in ['CustomerName', 'State', 'City']: 
+    # 3. String normalization: Strip out hidden white spaces
+    for col in ['CustomerName', 'State', 'City']:
         orders[col] = orders[col].astype(str).str.strip()
-    for col in ['Category', 'Sub-Category', 'PaymentMode']: 
+        
+    for col in ['Category', 'Sub-Category', 'PaymentMode']:
         details[col] = details[col].astype(str).str.strip()
         
-    # 4. Export clean production files
+    # 4. Save optimized CSV records
     orders.to_csv("Cleaned_Orders.csv", index=False)
     details.to_csv("Cleaned_Details.csv", index=False)
-    print("✅ Success! Cleaned_Orders.csv and Cleaned_Details.csv have been created!")
+    print("✅ Success! Cleaned tables successfully saved.")
 
 if __name__ == "__main__":
     run_advanced_pipeline(orders_csv="Orders.csv", details_csv="Details.csv")
-    
- ###   🗄️ Phase 2: Relational Schema & Analytical Layers (SQL)
-1. Schema Configuration (SQL_Analytics/schema_setup.sql)
-SQL
--- Create the database staging container
-CREATE DATABASE IF NOT EXISTS ecommerce_staging;
+
+## 🗄️ Phase 2: Relational Data Warehousing (SQL)
+The sanitized flat tables are loaded into a relational star schema inside MySQL, applying explicit database constraints and indexes to handle fast analytical execution boundaries
+
+1. Schema Generation Definition (schema_setup.sql)
+   CREATE DATABASE IF NOT EXISTS ecommerce_staging;
 USE ecommerce_staging;
 
--- Drop existing tables to ensure clean compilation during deployments
 DROP TABLE IF EXISTS Details;
 DROP TABLE IF EXISTS Orders;
 
--- Create parent Dimension Table (Orders)
+-- Create Parent Master Dimension Table
 CREATE TABLE Orders (
     Order_ID VARCHAR(50) NOT NULL,
     Order_Date DATE NOT NULL,
@@ -174,7 +165,7 @@ CREATE TABLE Orders (
     PRIMARY KEY (Order_ID)
 );
 
--- Create child Fact Table (Details) with relational Foreign Key mapping
+-- Create Child Operations Fact Table
 CREATE TABLE Details (
     Line_Item_ID INT AUTO_INCREMENT,
     Order_ID VARCHAR(50) NOT NULL,
@@ -188,50 +179,17 @@ CREATE TABLE Details (
     FOREIGN KEY (Order_ID) REFERENCES Orders(Order_ID) ON DELETE CASCADE
 );
 
--- Indexing optimized for frequent business analytics reporting joins
+-- Optimization indexing for high-frequency time-series reporting joins
 CREATE INDEX idx_orders_date ON Orders(Order_Date);
-CREATE INDEX idx_details_category ON Details(Category);
 
-2. Analytical Optimization Queries (SQL_Analytics/business_analytics_queries.sql)
-SQL
-USE ecommerce_staging;
+## 📊 Phase 3: Advanced Business Calculation Layer (DAX)
+To drive performance across dynamic timeline slicers, complex business metrics are engineered natively inside the Power BI data model using optimized DAX syntax blocks: 
 
--- QUERY A: The Cash-on-Delivery (COD) Risk Exposure Profile Matrix
-SELECT 
-    PaymentMode,
-    COUNT(DISTINCT Order_ID) AS Total_Transactions,
-    SUM(Amount) AS Aggregated_Revenue,
-    SUM(Profit) AS Total_Net_Profit,
-    ROUND((SUM(Profit) / SUM(Amount)) * 100, 2) AS Segment_Profit_Margin_Pct
-FROM Details
-GROUP BY PaymentMode
-ORDER BY Total_Transactions DESC;
-
--- QUERY B: Rolling Revenue running totals via Window Functions
-WITH DailySales AS (
-    SELECT 
-        o.Order_Date,
-        SUM(d.Amount) AS Daily_Revenue
-    FROM Orders o
-    INNER JOIN Details d ON o.Order_ID = d.Order_ID
-    GROUP BY o.Order_Date
-)
-SELECT 
-    Order_Date,
-    Daily_Revenue,
-    SUM(Daily_Revenue) OVER (ORDER BY Order_Date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS Cumulative_Running_Revenue
-FROM DailySales
-ORDER BY Order_Date;
-
-📊 Phase 3: Interactive Analytical Workspace (Power BI)
-Business-Critical Core Formulations (DAX Measures): 
-
-Total Sales Revenue Base Accumulator:
+Total Transaction Revenue Base Formula:
 Total Revenue = SUM(Details[Amount])
 
-Dynamic Profit Margin Boundary Controller:
+Dynamic Net Operating Profit Margin Calculator:
 Profit Margin = DIVIDE(SUM(Details[Profit]), [Total Revenue], 0)
-
 
 ## 💡 Key Business Insights
 
