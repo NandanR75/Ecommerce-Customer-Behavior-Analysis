@@ -1,251 +1,145 @@
-# 🛒 E-Commerce Sales & Business Intelligence Dashboard
+# 🛒 E-Commerce Sales & Customer Behaviour Analysis
 
-An end-to-end data analytics and business intelligence project utilizing **Power BI** to analyze e-commerce sales performance, customer buying patterns, regional revenue distribution, and payment preferences across India.
+An end-to-end data analytics project analysing sales performance, profitability drivers, regional demand, and customer behaviour for an Indian e-commerce platform.
 
-![PowerBI](https://img.shields.io/badge/PowerBI-Dashboard-yellow?logo=powerbi)
 ![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)
-![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-green?logo=pandas)
-![License](https://img.shields.io/badge/License-MIT-lightgrey)
+![Pandas](https://img.shields.io/badge/Pandas-EDA-green?logo=pandas)
+![SQL](https://img.shields.io/badge/SQL-20%20Queries-orange?logo=postgresql)
+![Power BI](https://img.shields.io/badge/PowerBI-Dashboard-yellow?logo=powerbi)
 
 ---
 
-## 📋 Project Overview & Problem Statement
+## 📋 Project Overview
 
-E-commerce businesses need clear insights into their sales performance, customer segments, and regional demand to make data-driven decisions. This project analyzes **1,500 order line items across 500 orders (2018)** to uncover key revenue drivers, profitable product categories, preferred payment methods, and top-performing states and cities across India.
+E-commerce businesses face a hidden profitability problem: high revenue does not guarantee high profit. This project analyses **1,500 order line items across 500 orders (2018)** to answer five key business questions:
+
+1. Which product sub-categories are actually destroying margin?
+2. Which payment methods generate the most profit per transaction?
+3. Which months and quarters drive disproportionate revenue — and which are loss-making?
+4. Which states and cities are the strongest markets?
+5. What share of customers are repeat buyers, and what is the revenue risk from one-time buyers?
 
 ---
 
-## 📸 Dashboard Preview
+## 🔑 Key Findings
 
-![E-Commerce Dashboard](./images/ecommerce_dashboard.png)
-
----
-
-## 🛠️ Tech Stack & Architecture
-
-| Tool | Purpose |
-|------|---------|
-| Microsoft Power BI Desktop | Data modeling & interactive dashboard |
-| DAX (Data Analysis Expressions) | Advanced KPIs & calculated metrics |
-| Python, Pandas | Data exploration & preprocessing |
+| Finding | Detail |
+|---------|--------|
+| 35.3% of line items are loss-making | Losing ₹38,079 gross while gaining ₹75,042 — marginal net profit of ₹36,963 |
+| Electronic Games & Furnishings destroy margin | Net-negative sub-categories; selling more hurts the business |
+| Credit Card has 14.5% margin vs UPI's 4.8% | Statistically significant difference (p = 0.0002) |
+| Q1 = 36.8% of annual revenue; Q3 = 16.4% | Massive seasonal skew with actionable inventory implications |
+| Only 31.8% of customers are repeat buyers | Retention is the single biggest revenue growth lever |
+| Shirts & T-shirts have ~20% margin | Highest-margin sub-categories, yet underweighted vs loss-makers |
 
 ---
 
 ## 📁 Repository Structure
 
 ```
-ecommerce-dashboard-project/
-├── images/                        # Dashboard screenshots
-│   └── ecommerce_dashboard.png
-├── Orders.csv                     # Customer order master data (500 rows)
-├── Details.csv                    # Order line item details (1,500 rows)
-├── ecommerce.pbix                 # Master Power BI report file
-└── README.md                      # Project documentation
+ecommerce-analysis/
+├── Orders.csv                          # 500 orders — date, customer, state, city
+├── Details.csv                         # 1,500 line items — amount, profit, category, payment
+├── ecommerce.pbix                      # Power BI interactive dashboard
+├── Python_Scripts/
+│   ├── EDA_analysis.ipynb              # Full EDA: 12 sections, charts, statistical tests
+│   └── data_preprocessing.py          # Data cleaning pipeline
+├── SQL_Analytics/
+│   ├── business_analytics_queries.sql  # 20 analytical SQL queries
+│   ├── sql_runner.py                   # Run all queries via DuckDB (no DB setup needed)
+│   └── schema_setup.sql               # MySQL schema for production deployment
+└── README.md
 ```
 
 ---
 
-## 📊 Dataset Overview
+## 📊 Dataset
 
-### Orders.csv
-- **Rows:** 500 orders
-- **Columns:** 5 features
-- **Date Range:** January 2018 – December 2018
-- **Coverage:** 19 Indian states, 336 unique customers
+### Orders.csv (500 rows)
+| Column | Type | Description |
+|--------|------|-------------|
+| Order ID | String | Unique order identifier |
+| Order Date | Date | DD-MM-YYYY format |
+| CustomerName | String | Customer name |
+| State | String | Indian state (19 states) |
+| City | String | City of delivery |
 
-### Details.csv
-- **Rows:** 1,500 line items
-- **Columns:** 7 features
-- **Categories:** Electronics, Clothing, Furniture
-- **Payment Modes:** COD, UPI, Debit Card, Credit Card, EMI
-
-### Dataset Preview
-
-**Orders.csv**
-
-| Order ID | Order Date | CustomerName | State | City |
-|:---|:---|:---|:---|:---|
-| B-26055 | 10-03-2018 | Harivansh | Uttar Pradesh | Mathura |
-| B-25993 | 03-02-2018 | Madhav | Delhi | Delhi |
-| B-25973 | 24-01-2018 | Madan Mohan | Uttar Pradesh | Mathura |
-
-**Details.csv**
-
-| Order ID | Amount | Profit | Quantity | Category | Sub-Category | PaymentMode |
-|:---|:---|:---|:---|:---|:---|:---|
-| B-25681 | ₹1,096 | ₹658 | 7 | Electronics | Electronic Games | COD |
-| B-26055 | ₹5,729 | ₹64 | 14 | Furniture | Chairs | EMI |
-| B-25955 | ₹2,927 | ₹146 | 8 | Furniture | Bookcases | EMI |
+### Details.csv (1,500 rows)
+| Column | Type | Description |
+|--------|------|-------------|
+| Order ID | String | Foreign key → Orders |
+| Amount | Integer | Sale value in INR |
+| Profit | Integer | Profit/loss in INR (can be negative) |
+| Quantity | Integer | Units sold |
+| Category | String | Electronics, Clothing, Furniture |
+| Sub-Category | String | 17 product types |
+| PaymentMode | String | COD, UPI, Debit Card, Credit Card, EMI |
 
 ---
 
-## 📖 Data Dictionary
+## 🛠️ Tech Stack
 
-### Orders.csv
-
-| Column Name | Data Type | Description |
-|:---|:---|:---|
-| **Order ID** | String | Unique identifier for each order |
-| **Order Date** | Date | Date when the order was placed |
-| **CustomerName** | String | Name of the customer |
-| **State** | String | Indian state where the order was placed |
-| **City** | String | City where the order was placed |
-
-### Details.csv
-
-| Column Name | Data Type | Description |
-|:---|:---|:---|
-| **Order ID** | String | Foreign key linking to Orders.csv |
-| **Amount** | Integer | Total sale amount in INR |
-| **Profit** | Integer | Profit earned on the order in INR |
-| **Quantity** | Integer | Number of units sold |
-| **Category** | String | Product category — Electronics, Clothing, Furniture |
-| **Sub-Category** | String | Specific product type (e.g., Printers, Saree, Chairs) |
-| **PaymentMode** | String | Mode of payment — COD, UPI, Debit Card, Credit Card, EMI |
+| Tool | Purpose |
+|------|---------|
+| Python (Pandas, Matplotlib, Seaborn, SciPy) | EDA, visualisation, statistical testing |
+| SQL (DuckDB / MySQL 8+) | 20 analytical queries with window functions |
+| Power BI + DAX | Interactive business intelligence dashboard |
 
 ---
 
-### 🛠️Phase 1: Automated Preprocessing & ETL (Python)
-Before running warehouse staging configurations, an automated ETL script written in Python (Pandas) operates as a data quality gateway. It cleans null values, drop structural breaks, strips string artifact whitespaces, and standardizes transaction dates to ensure seamless database joins.
+## 🚀 How to Run
 
-import pandas as pd
-import numpy as np
-import os
+### Python EDA Notebook
+```bash
+pip install pandas matplotlib seaborn scipy jupyter
+cd Python_Scripts
+jupyter notebook EDA_analysis.ipynb
+```
 
-def run_advanced_pipeline(orders_csv="Orders.csv", details_csv="Details.csv"):
-    print("🚀 Booting Enterprise Preprocessing Pipeline...")
-    
-  # Verify that raw data assets exist in the path environment
-if not os.path.exists(orders_csv) or not os.path.exists(details_csv):
-    print("❌ Error: Raw dataset parameters not found in file paths.")
-    return
-    
-orders = pd.read_csv(orders_csv)
-details = pd.read_csv(details_csv)
+### SQL Analysis (no database needed)
+```bash
+pip install duckdb pandas
+cd SQL_Analytics
+python sql_runner.py                  # run all 20 queries
+python sql_runner.py --section 2      # run only Section 2 (Profitability)
+python sql_runner.py --export         # save all results to sql_results/
+```
 
-#1. Clear missing relational keys
-orders.dropna(subset=['Order ID'], inplace=True)
-details.dropna(subset=['Order ID'], inplace=True)
-
- 2. Standardize chronology to ISO format (YYYY-MM-DD)
-orders['Order Date'] = pd.to_datetime(orders['Order Date'], format='%d-%m-%Y')
-
- 3. String normalization: Strip out hidden white spaces
-for col in ['CustomerName', 'State', 'City']:
-    orders[col] = orders[col].astype(str).str.strip()
-    
-for col in ['Category', 'Sub-Category', 'PaymentMode']:
-    details[col] = details[col].astype(str).str.strip()
-    
- 4. Save optimized CSV records
-orders.to_csv("Cleaned_Orders.csv", index=False)
-details.to_csv("Cleaned_Details.csv", index=False)
-print("✅ Success! Cleaned tables successfully saved.")
-
-if __name__ == "__main__":
-    run_advanced_pipeline(orders_csv="Orders.csv", details_csv="Details.csv")
-
-## 🗄️ Phase 2: Relational Data Warehousing (SQL)
-The sanitized flat tables are loaded into a relational star schema inside MySQL, applying explicit database constraints and indexes to handle fast analytical execution boundaries
-
-1. Schema Generation Definition (schema_setup.sql)
-   CREATE DATABASE IF NOT EXISTS ecommerce_staging;
-    USE ecommerce_staging;
-
-    DROP TABLE IF EXISTS Details;
-    DROP TABLE IF EXISTS Orders;
-
--- Create Parent Master Dimension Table
-    CREATE TABLE Orders (
-    Order_ID VARCHAR(50) NOT NULL,
-    Order_Date DATE NOT NULL,
-    CustomerName VARCHAR(100) NOT NULL,
-    State VARCHAR(100) NOT NULL,
-    City VARCHAR(100) NOT NULL,
-    PRIMARY KEY (Order_ID)
-    );
-
--- Create Child Operations Fact Table
-    CREATE TABLE Details (
-    Line_Item_ID INT AUTO_INCREMENT,
-    Order_ID VARCHAR(50) NOT NULL,
-    Amount INT NOT NULL,
-    Profit INT NOT NULL,
-    Quantity INT NOT NULL,
-    Category VARCHAR(100) NOT NULL,
-    Sub_Category VARCHAR(100) NOT NULL,
-    PaymentMode VARCHAR(50) NOT NULL,
-    PRIMARY KEY (Line_Item_ID),
-    FOREIGN KEY (Order_ID) REFERENCES Orders(Order_ID) ON DELETE CASCADE
-    );
-
--- Optimization indexing for high-frequency time-series reporting joins
-    CREATE INDEX idx_orders_date ON Orders(Order_Date);
-
-
-## 📊 Phase 3: Advanced Business Calculation Layer (DAX)
-To drive performance across dynamic timeline slicers, complex business metrics are engineered natively inside the Power BI data model using optimized DAX syntax blocks: 
-
-Total Transaction Revenue Base Formula:
-Total Revenue = SUM(Details[Amount])
-
-Dynamic Net Operating Profit Margin Calculator:
-Profit Margin = DIVIDE(SUM(Details[Profit]), [Total Revenue], 0)
-
-## 💡 Key Business Insights
-
-| Metric | Value |
-|:---|:---|
-| 📦 Total Orders | 500 |
-| 🧾 Total Line Items | 1,500 |
-| 💰 Total Revenue | ₹4,37,771 |
-| 📈 Total Profit | ₹36,963 |
-| 📊 Profit Margin | 8.44% |
-| 🛍️ Total Units Sold | 5,615 |
-| 👥 Unique Customers | 336 |
-| 🏆 Top Category | Electronics (₹1,66,267) |
-| 📍 Top State | Maharashtra (₹1,02,498) |
-| 🏙️ Top City | Indore (₹63,680) |
-| 💳 Most Used Payment | COD (684 transactions) |
-| 🔝 Top Sub-Category | Printers (₹59,252) |
+### Power BI Dashboard
+- Open `ecommerce.pbix` in Power BI Desktop
+- If prompted, update data source paths to your local `Orders.csv` and `Details.csv`
 
 ---
 
-## 🚀 How to Run the Project Locally
+## 📈 SQL Query Coverage
 
-### Requirements
-- [Microsoft Power BI Desktop](https://powerbi.microsoft.com/desktop/) (free)
-- Python 3.x with `pandas` for data exploration (optional)
-
-### Steps
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/NandanR75/<your-repo-name>.git
-   cd <your-repo-name>
-   ```
-
-2. **Open the Power BI Dashboard**
-   - Double-click `ecommerce.pbix` to open in Power BI Desktop
-   - If prompted to update data source path:
-     - Go to **Home → Transform Data → Data Source Settings**
-     - Click **Change Source** and browse to your local `Orders.csv` and `Details.csv`
-     - Click **Apply Changes** to refresh all visuals
-
-3. **Explore the Data (Optional)**
-   ```python
-   import pandas as pd
-   orders = pd.read_csv('Orders.csv')
-   details = pd.read_csv('Details.csv')
-   merged = orders.merge(details, on='Order ID')
-   print(merged.describe())
-   ```
+| Section | Queries | Topics |
+|---------|---------|--------|
+| 1. Executive KPIs | 2 | Business summary, loss exposure |
+| 2. Profitability | 3 | Sub-category margins, loss leaders, category mix |
+| 3. Time Series | 4 | Monthly/quarterly trends, MoM growth, seasonality index |
+| 4. Regional | 3 | State ranking, city deep-dive, top product per state |
+| 5. Payment | 2 | Payment mode profitability, payment preference by category |
+| 6. Customer | 3 | Customer value ranking, repeat vs one-time, loss-making customers |
+| 7. Advanced | 3 | 3-month rolling average, order value bands, customer quartiles |
 
 ---
 
-## 🤝 Let's Connect!
+## 💡 Business Recommendations
 
-Interested in collaborating or discussing this project?
+| Priority | Finding | Action |
+|----------|---------|--------|
+| 🔴 High | 35% of line items are loss-making | Immediate pricing/supplier audit |
+| 🔴 High | Electronic Games & Furnishings net-negative | Reprice or discontinue |
+| 🟡 Medium | Credit Card has 14.5% margin vs COD's 8.1% | Incentivise prepay over COD |
+| 🟡 Medium | Only 31.8% customer retention | Launch loyalty/re-engagement programme |
+| 🟡 Medium | Top customer Harivansh is loss-making | Track margin, not just revenue, per customer |
+| 🟢 Low | Q3 (Jul–Sep) weakest quarter | Reduce inventory build; run clearance promotions |
+| 🟢 Low | Maharashtra + MP = 43% of revenue | Deepen stock depth in top two states |
 
-- 💼 **LinkedIn:** https://www.linkedin.com/in/nandan-r-010564224
+---
+
+## 🤝 Connect
+
+- 💼 **LinkedIn:** [Nandan R](https://www.linkedin.com/in/nandan-r-010564224)
 - 📧 **Email:** nandanr121995@gmail.com
