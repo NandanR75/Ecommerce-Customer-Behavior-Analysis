@@ -22,7 +22,7 @@ def run_advanced_pipeline(orders_csv="Orders.csv", details_csv="Details.csv"):
     for col in ['Category', 'Sub-Category', 'PaymentMode']:
         details[col] = details[col].astype(str).str.strip()
         
-    orders.to_csv("Cleaned_Orders.csv", index=False)
+    orders.to_csv("Cleaned_Orders.csv", index=False, date_format='%Y-%m-%d')
     details.to_csv("Cleaned_Details.csv", index=False)
     print("✅ Success! Cleaned_Orders.csv and Cleaned_Details.csv have been created!")
 
