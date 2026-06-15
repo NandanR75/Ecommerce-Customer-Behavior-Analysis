@@ -123,21 +123,21 @@ if not os.path.exists(orders_csv) or not os.path.exists(details_csv):
 orders = pd.read_csv(orders_csv)
 details = pd.read_csv(details_csv)
 
-# 1. Clear missing relational keys
+#1. Clear missing relational keys
 orders.dropna(subset=['Order ID'], inplace=True)
 details.dropna(subset=['Order ID'], inplace=True)
 
-# 2. Standardize chronology to ISO format (YYYY-MM-DD)
+ 2. Standardize chronology to ISO format (YYYY-MM-DD)
 orders['Order Date'] = pd.to_datetime(orders['Order Date'], format='%d-%m-%Y')
 
-# 3. String normalization: Strip out hidden white spaces
+ 3. String normalization: Strip out hidden white spaces
 for col in ['CustomerName', 'State', 'City']:
     orders[col] = orders[col].astype(str).str.strip()
     
 for col in ['Category', 'Sub-Category', 'PaymentMode']:
     details[col] = details[col].astype(str).str.strip()
     
-# 4. Save optimized CSV records
+ 4. Save optimized CSV records
 orders.to_csv("Cleaned_Orders.csv", index=False)
 details.to_csv("Cleaned_Details.csv", index=False)
 print("✅ Success! Cleaned tables successfully saved.")
@@ -150,23 +150,23 @@ The sanitized flat tables are loaded into a relational star schema inside MySQL,
 
 1. Schema Generation Definition (schema_setup.sql)
    CREATE DATABASE IF NOT EXISTS ecommerce_staging;
-USE ecommerce_staging;
+    USE ecommerce_staging;
 
-DROP TABLE IF EXISTS Details;
-DROP TABLE IF EXISTS Orders;
+    DROP TABLE IF EXISTS Details;
+    DROP TABLE IF EXISTS Orders;
 
 -- Create Parent Master Dimension Table
-CREATE TABLE Orders (
+    CREATE TABLE Orders (
     Order_ID VARCHAR(50) NOT NULL,
     Order_Date DATE NOT NULL,
     CustomerName VARCHAR(100) NOT NULL,
     State VARCHAR(100) NOT NULL,
     City VARCHAR(100) NOT NULL,
     PRIMARY KEY (Order_ID)
-);
+    );
 
 -- Create Child Operations Fact Table
-CREATE TABLE Details (
+    CREATE TABLE Details (
     Line_Item_ID INT AUTO_INCREMENT,
     Order_ID VARCHAR(50) NOT NULL,
     Amount INT NOT NULL,
@@ -177,10 +177,11 @@ CREATE TABLE Details (
     PaymentMode VARCHAR(50) NOT NULL,
     PRIMARY KEY (Line_Item_ID),
     FOREIGN KEY (Order_ID) REFERENCES Orders(Order_ID) ON DELETE CASCADE
-);
+    );
 
 -- Optimization indexing for high-frequency time-series reporting joins
-CREATE INDEX idx_orders_date ON Orders(Order_Date);
+    CREATE INDEX idx_orders_date ON Orders(Order_Date);
+
 
 ## 📊 Phase 3: Advanced Business Calculation Layer (DAX)
 To drive performance across dynamic timeline slicers, complex business metrics are engineered natively inside the Power BI data model using optimized DAX syntax blocks: 
