@@ -115,32 +115,32 @@ import os
 def run_advanced_pipeline(orders_csv="Orders.csv", details_csv="Details.csv"):
     print("🚀 Booting Enterprise Preprocessing Pipeline...")
     
-    # Verify that raw data assets exist in the path environment
-    if not os.path.exists(orders_csv) or not os.path.exists(details_csv):
-        print("❌ Error: Raw dataset parameters not found in file paths.")
-        return
-        
-    orders = pd.read_csv(orders_csv)
-    details = pd.read_csv(details_csv)
+  # Verify that raw data assets exist in the path environment
+if not os.path.exists(orders_csv) or not os.path.exists(details_csv):
+    print("❌ Error: Raw dataset parameters not found in file paths.")
+    return
     
-    # 1. Clear missing relational keys
-    orders.dropna(subset=['Order ID'], inplace=True)
-    details.dropna(subset=['Order ID'], inplace=True)
+orders = pd.read_csv(orders_csv)
+details = pd.read_csv(details_csv)
+
+# 1. Clear missing relational keys
+orders.dropna(subset=['Order ID'], inplace=True)
+details.dropna(subset=['Order ID'], inplace=True)
+
+# 2. Standardize chronology to ISO format (YYYY-MM-DD)
+orders['Order Date'] = pd.to_datetime(orders['Order Date'], format='%d-%m-%Y')
+
+# 3. String normalization: Strip out hidden white spaces
+for col in ['CustomerName', 'State', 'City']:
+    orders[col] = orders[col].astype(str).str.strip()
     
-    # 2. Standardize chronology to ISO format (YYYY-MM-DD)
-    orders['Order Date'] = pd.to_datetime(orders['Order Date'], format='%d-%m-%Y')
+for col in ['Category', 'Sub-Category', 'PaymentMode']:
+    details[col] = details[col].astype(str).str.strip()
     
-    # 3. String normalization: Strip out hidden white spaces
-    for col in ['CustomerName', 'State', 'City']:
-        orders[col] = orders[col].astype(str).str.strip()
-        
-    for col in ['Category', 'Sub-Category', 'PaymentMode']:
-        details[col] = details[col].astype(str).str.strip()
-        
-    # 4. Save optimized CSV records
-    orders.to_csv("Cleaned_Orders.csv", index=False)
-    details.to_csv("Cleaned_Details.csv", index=False)
-    print("✅ Success! Cleaned tables successfully saved.")
+# 4. Save optimized CSV records
+orders.to_csv("Cleaned_Orders.csv", index=False)
+details.to_csv("Cleaned_Details.csv", index=False)
+print("✅ Success! Cleaned tables successfully saved.")
 
 if __name__ == "__main__":
     run_advanced_pipeline(orders_csv="Orders.csv", details_csv="Details.csv")
