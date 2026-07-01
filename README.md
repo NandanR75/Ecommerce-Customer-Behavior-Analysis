@@ -35,7 +35,7 @@ E-commerce businesses face a hidden profitability problem: high revenue does not
 ---
 
 ## Dashboard
-![Dashboard](Screenshot (368).png)(
+![Dashboard](Screenshot (368).png)(Screenshot (370).png)
 
 ## 📁 Repository Structure
 
