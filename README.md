@@ -35,7 +35,12 @@ E-commerce businesses face a hidden profitability problem: high revenue does not
 ---
 
 ## Dashboard
-![Dashboard](Screenshot (368).png)(Screenshot (370).png)
+
+### Sales Performance & Profitability
+![Sales Performance Overview](./Screenshot%20(368).png)
+
+### Regional Demand & Customer Behavior
+![Regional Demand and Behavior](./Screenshot%20(370).png)
 
 ## 📁 Repository Structure
 
